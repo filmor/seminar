@@ -2,21 +2,21 @@
 
 \mode<presentation>
 {
-  \usetheme{Warsaw}
+  \usetheme{Berlin}
+  \usefonttheme{professionalfonts}
   \setbeamercovered{transparent}
+  \setbeamertemplate{footline}[frame number]
 }
-
 
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
-%\usepackage{times}
-%\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage[T1]{fontenc}
 
-\title[Kurzversion des Titels]{Titel}
+\title[N-Körperproblem I]{N-Körperproblem I}
+% \subtitle{}
 
-\subtitle{Untertitel}
-
-\author{Benedikt Sauer}
+\author[B. Sauer]{Benedikt Sauer}
 
 \institute{}
 
@@ -33,12 +33,12 @@
 
 % Folgendes sollte geloecht werden, wenn man nicht am Anfang jedes
 % Unterabschnitts die Gliederung nochmal sehen moechte.
-\AtBeginSubsection[]
-{
-  \begin{frame}<beamer>{Gliederung}
-    \tableofcontents[currentsection,currentsubsection]
-  \end{frame}
-}
+%\AtBeginSubsection[]
+%{
+%  \begin{frame}<beamer>{Gliederung}
+%    \tableofcontents[currentsection,currentsubsection]
+%  \end{frame}
+%}
 
 
 % Falls Aufzaehlungen immer schrittweise gezeigt werden sollen, kann
@@ -53,81 +53,104 @@
 \end{frame}
 
 \begin{frame}{Gliederung}
-  \tableofcontents
+  \tableofcontents[pausesections]
   % Die Option [pausesections] koennte nuetzlich sein.
 \end{frame}
 
-% - Es sollte genau zwei oder drei Abschnitte geben (neben der
-%   Zusammenfassung). 
-% - *Hoechstens* drei Unterabschnitte pro Abschnitt.
 % - Pro Rahmen sollte man zwischen 30s und 2min reden. Es sollte also
 %   15 bis 30 Rahmen geben.
 
 \section{Einführung}
-\begin{frame}{}{Untertitel sind optional.}
-  % - Eine Überschrift fasst einen Rahmen verständlich zusammen. Man
-  %   muss sie verstehen können, selbst wenn man nicht den Rest des
-  %   Rahmens versteht.
-
+\begin{frame}[Das Mehrkörperproblem]
   \begin{itemize}
-  \item
-    Viel \texttt{itemize} benutzen.
-  \item
-    Sehr kurze Sätze oder Satzglieder verwenden.
+    \item Mehrere untereinander wechselwirkende Körper
+    \item Interessant (weil nicht mehr einfach lösbar) für mehr als 2 Körper
+      \begin{itemize}
+        \item \alert{nicht} unlösbar, es existiert eine analytische Lösung
+          (vorausgesetzt, die Körper kollidieren nicht)
+      \end{itemize}
+    \item Für große Zahlen müssen wir numerisch lösen
+  \end{itemize}
+  \vskip10pt
+  \begin{itemize}
+    \item Und genau das wollen wir nun tun\ldots
   \end{itemize}
 \end{frame}
-
-\begin{frame}{Überschriften müssen informativ sein.}
-
-  Man kann Overlays erzeugen\dots
-  \begin{itemize}
-  \item mit dem \texttt{pause}-Befehl:
-    \begin{itemize}
-    \item
-      Erster Punkt.
-      \pause
-    \item    
-      Zweiter Punkt.
-    \end{itemize}
-  \item
-    mittels Overlay-Spezifikationen:
-    \begin{itemize}
-    \item<3->
-      Erster Punkt.
-    \item<4->
-      Zweiter Punkt.
-    \end{itemize}
-  \item
-    mit dem allgemeinen \texttt{uncover}-Befehl:
-    \begin{itemize}
-      \uncover<5->{\item
-        Erster Punkt.}
-      \uncover<6->{\item
-        Zweiter Punkt.}
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-
-
 \subsection{Physik}
-\subsubsection{Gravitation}
-\subsubsection{Hydrodynamik}
+\subsubsection*{Gravitation}
+\begin{frame}{Gravitation}
+  Im einfachsten Fall haben wir folgende Hamiltonfunktion:
+  \begin{align}
+    \mathcal H(p_i,x_i) = \sum_i \frac{\vec{p}_i^2}{2m_i} +
+    \frac{1}{2}\sum_{i,j} {m_i m_j \varphi(\vec{x}_i - \vec{x}_j)}
+    \label{eqn:hamilton}
+  \end{align}
+  wobei $\varphi$ das Gravitationspotential ist.
+\end{frame}
+\begin{frame}{relativistische Ergänzungen}
+  Da wir aufgeklärte, relativistisch rechnenden Menschen sind, wird die
+  Hamiltonfunktion durch den Skalierungsfaktor $a(t)$ explizit zeitabhängig:
+  \begin{align}
+    \mathcal H(p_i,x_i,t) = \sum_i \frac{\vec{p}_i^2}{2m_i a(t)^2} +
+    \frac{1}{2}\sum_{i,j} \frac{m_i m_j \varphi(\vec{x}_i - \vec{x}_j)}{a(t)}
+    \label{eqn:hamilton_rel}
+  \end{align}
+  mit den neuen kanonischen Impulsen $\vec p_i := a(t)^2 m_i\dot\vec{x}_i$.
+  Wir skalieren die Wirkung unserer Abstände auf die Energie um.
+\end{frame}
 \subsection{Mathematik}
-\subsubsection{Poissongleichung}
-\subsubsection{Lösbarkeit}
+\begin{frame}{Poissongleichung}
+  Das Potential $\varphi$ erhalten wir aus der \emph{Poissongleichung}
+  \begin{align}
+    \Delta \varphi(\vec{x}) = 4\pi G \rho(\vec{x})
+  \end{align}
+  mit einer Dichtefunktion $\rho$, die im einfachsten Fall von $n$ Körpern
+  \begin{align}
+    \rho(x) = \sum_{i=1}^n m_i \delta(\vec{x} - \vec{x}_i)
+  \end{align}
+  ist.
+\end{frame}
+\begin{frame}{Poissongleichung}{Diskretisierung}
+\end{frame}
+\begin{frame}{Poissongleichung}{Hydrodynamik}
+\end{frame}
+% Als nächstes: Diskretisierung der Poissongleichung
+% SPH-Methode
+
+\begin{frame}
+  
+\end{frame}
+
 \subsection{Informatik}
-\subsubsection{Parallelisierung}
+\subsubsection*{Parallelisierung}
+\begin{frame}{Parallelisierung}
+  Teile-und-Herrsche-Prinzip
+  % Ausführen
+\end{frame}
+\begin{frame}
+  \begin{itemize}
+    \item Parallelisierung ist toll:
+      \begin{itemize}
+        \item Wir brauchen nur vergleichsweise kleine Rechner
+        \item Wir ersparen uns Flaschenhälse
+      \end{itemize}
+    \item Also wollen wir unsere Algorithmen parallel ausführen
+  \end{itemize}
+\end{frame}
+
+% Octtree? Baumstruktur?
 
 \section{Implementierung (Gadget)}
-\subsection{Diskretisierung}
-\subsection{Charakteristikenverfahren}
-\subsection{Particle Mesh}
-\subsubsection{allgemein}
-\subsubsection{P3M}
-\subsubsection{TreePM}
-
-\section{andere Verfahren}
-\subsection{bla}
+\subsection{Gravitationsberechnung}
+\subsubsection*{Diskretisierung}
+\subsubsection*{Charakteristikenverfahren}
+\subsubsection{Particle-Particle}
+\subsubsection{Particle-Mesh}
+\subsubsection*{allgemein}
+\subsubsection*{P3M}
+\subsubsection*{TreePM}
+\subsection{Zeitentwicklung}
+\subsection{Parallelisierung}
 
 \section{Zusammenfassung}
 \begin{frame}{Zusammenfassung}
@@ -135,11 +158,10 @@
   % Die Zusammenfassung sollte sehr kurz sein.
   \begin{itemize}
   \item
-    Die \alert{erste Hauptbotschaft} des Vortrags in ein bis zwei Zeilen.
+    Wir können mittlerweile mit sehr hoher Genauigkeit und gleichzeitig hoher
+    Geschwindigkeit rechnen
   \item
-    Die \alert{zweite Hauptbotschaft} des Vortrags in ein bis zwei Zeilen.
-  \item
-    Eventuell noch eine \alert{dritte Botschaft}, aber nicht noch mehr.
+    Guckstu nächster Vortrag
   \end{itemize}
   
   % Der folgende Ausblick ist optional.
@@ -148,9 +170,11 @@
   \item
     Ausblick
     \begin{itemize}
-    \item Parallelisierung (OpenCV?!)
     \item
-      Nochwas, das wir noch nicht lösen konnten.
+      weitere Parallelisierung (z.B. OpenCL)\\
+      $\Rightarrow$ billigere Rechner und insgesamt mehr Leistung
+    \item
+
     \end{itemize}
   \end{itemize}
 \end{frame}
