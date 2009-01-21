@@ -2,7 +2,7 @@
 
 \mode<presentation>
 {
-  \usetheme{Berlin}
+  \usetheme{Singapore}
   \usefonttheme{professionalfonts}
   \setbeamercovered{transparent}
   \setbeamertemplate{footline}[frame number]
@@ -10,8 +10,7 @@
 
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage{times}
-\usepackage[T1]{fontenc}
+\usepackage{multimedia}
 
 \title[N-Körperproblem I]{N-Körperproblem I}
 % \subtitle{}
@@ -31,20 +30,7 @@
 % \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
 % \logo{\pgfuseimage{university-logo}}
 
-% Folgendes sollte geloecht werden, wenn man nicht am Anfang jedes
-% Unterabschnitts die Gliederung nochmal sehen moechte.
-%\AtBeginSubsection[]
-%{
-%  \begin{frame}<beamer>{Gliederung}
-%    \tableofcontents[currentsection,currentsubsection]
-%  \end{frame}
-%}
-
-
-% Falls Aufzaehlungen immer schrittweise gezeigt werden sollen, kann
-% folgendes Kommando benutzt werden:
-
-\beamerdefaultoverlayspecification{<+->}
+% \beamerdefaultoverlayspecification{<+->}
 
 \begin{document}
 
@@ -54,21 +40,40 @@
 
 \begin{frame}{Gliederung}
   \tableofcontents[pausesections]
-  % Die Option [pausesections] koennte nuetzlich sein.
 \end{frame}
 
-% - Pro Rahmen sollte man zwischen 30s und 2min reden. Es sollte also
-%   15 bis 30 Rahmen geben.
-
 \section{Einführung}
-\begin{frame}[Das Mehrkörperproblem]
+\subsection{Physik}
+\begin{frame}{Motivation}
+  \begin{itemize}
+    \item Materieverteilung
+    \item $\Rightarrow$ kosmische Parameter ($\Lambda$, etc.)
+      \pause
+      \vskip10pt
+    \begin{block}{Boltzmanngleichung}
+      \begin{align}
+        \frac{\mathrm df}{\mathrm dt} = \frac{\partial f}{\partial t} + \vec v
+        \frac{\partial f}{\partial r} - \frac{\partial \varphi}{\partial \vec
+        r}\frac{\partial f}{\partial \vec v} = 0
+      \end{align}
+    \end{block}
+      \pause
+    \item Phasenraumvolumen konstant
+      \pause
+    \item verwenden Monte-Carlo-Ansatz mit Tracerkörpern
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Das Mehrkörperproblem}
   \begin{itemize}
     \item Mehrere untereinander wechselwirkende Körper
+      \pause
     \item Interessant (weil nicht mehr einfach lösbar) für mehr als 2 Körper
       \begin{itemize}
         \item \alert{nicht} unlösbar, es existiert eine analytische Lösung
-          (vorausgesetzt, die Körper kollidieren nicht)
+          (vorausgesetzt, die Körper kollidieren nicht) [Wang, 1990]
       \end{itemize}
+      \pause
     \item Für große Zahlen müssen wir numerisch lösen
   \end{itemize}
   \vskip10pt
@@ -76,109 +81,217 @@
     \item Und genau das wollen wir nun tun\ldots
   \end{itemize}
 \end{frame}
-\subsection{Physik}
-\subsubsection*{Gravitation}
-\begin{frame}{Gravitation}
+
+\begin{frame}{Hamiltonfunktion}
   Im einfachsten Fall haben wir folgende Hamiltonfunktion:
   \begin{align}
-    \mathcal H(p_i,x_i) = \sum_i \frac{\vec{p}_i^2}{2m_i} +
+    \mathcal H(p_i,x_i) = \sum_i \frac{\left|\vec{p}_i\right|^2}{2m_i} +
     \frac{1}{2}\sum_{i,j} {m_i m_j \varphi(\vec{x}_i - \vec{x}_j)}
     \label{eqn:hamilton}
   \end{align}
   wobei $\varphi$ das Gravitationspotential ist.
 \end{frame}
+
 \begin{frame}{relativistische Ergänzungen}
-  Da wir aufgeklärte, relativistisch rechnenden Menschen sind, wird die
-  Hamiltonfunktion durch den Skalierungsfaktor $a(t)$ explizit zeitabhängig:
+  Für die Berechnungen verwenden wir \alert{mitbewegende Koordinaten}
   \begin{align}
     \mathcal H(p_i,x_i,t) = \sum_i \frac{\vec{p}_i^2}{2m_i a(t)^2} +
     \frac{1}{2}\sum_{i,j} \frac{m_i m_j \varphi(\vec{x}_i - \vec{x}_j)}{a(t)}
     \label{eqn:hamilton_rel}
   \end{align}
-  mit den neuen kanonischen Impulsen $\vec p_i := a(t)^2 m_i\dot\vec{x}_i$.
+  mit den neuen kanonischen Impulsen $\vec p_i := a(t)^2 m_i\dot{\vec{x}}_i$.
+  \pause
+  \vskip10pt
   Wir skalieren die Wirkung unserer Abstände auf die Energie um.
 \end{frame}
-\subsection{Mathematik}
+
+\subsection{Mathematik und Informatik}
 \begin{frame}{Poissongleichung}
   Das Potential $\varphi$ erhalten wir aus der \emph{Poissongleichung}
   \begin{align}
     \Delta \varphi(\vec{x}) = 4\pi G \rho(\vec{x})
   \end{align}
-  mit einer Dichtefunktion $\rho$, die im einfachsten Fall von $n$ Körpern
+  mit einer Dichtefunktion $\rho$, im einfachsten Fall von $n$ Körpern
   \begin{align}
-    \rho(x) = \sum_{i=1}^n m_i \delta(\vec{x} - \vec{x}_i)
+    \rho(\vec x) = \sum_{i=1}^n m_i \delta_d(\vec{x} - \vec{x}_i)
   \end{align}
-  ist.
 \end{frame}
+
 \begin{frame}{Poissongleichung}{Diskretisierung}
-\end{frame}
-\begin{frame}{Poissongleichung}{Hydrodynamik}
+  \begin{itemize}
+    \item<1-> Wir nehmen uns den Differenzenquotienten und streichen den Limes weg:
+      \begin{align}
+        f'(x) = \lim_{h\to 0} \frac{f(x+h) - f(x)}{h} \quad \to f_h'(x) =
+        \frac{f(x + h) - f(x)}{h}
+      \end{align}
+    \item<2-> Das können wir auch für die zweite Ableitung machen
+    \item<3-> Erhalten daraus mit $\nabla \cdot \nabla f = \Delta f$ eine Matrix für
+      den Laplaceoperator (Bandmatrix)
+  \end{itemize}
 \end{frame}
 % Als nächstes: Diskretisierung der Poissongleichung
-% SPH-Methode
 
-\begin{frame}
-  
-\end{frame}
-
-\subsection{Informatik}
-\subsubsection*{Parallelisierung}
-\begin{frame}{Parallelisierung}
-  Teile-und-Herrsche-Prinzip
-  % Ausführen
-\end{frame}
-\begin{frame}
+\begin{frame}{Baumalgorithmen und Parallelisierung}
   \begin{itemize}
-    \item Parallelisierung ist toll:
+    \item<1-> Wir benötigen für das Programm eine passende Raumaufteilung
       \begin{itemize}
-        \item Wir brauchen nur vergleichsweise kleine Rechner
-        \item Wir ersparen uns Flaschenhälse
+        \item<2-> Benutzen einen \alert{Octree} \pause
+        \item<3-> Teilen den Raum in Würfel auf, bis jeder Würfel genau ein Teilchen
+          enthält \pause
+        \item<4-> Leere Würfel werden nicht gespeichert \pause
       \end{itemize}
-    \item Also wollen wir unsere Algorithmen parallel ausführen
+      \vskip20pt
+    \item<5-> Damit wir das Programm in angemessener Zeit laufen lassen können,
+      führen wir es parallel aus
+      \begin{itemize}
+        \item Bäume lassen sich gut parallelisieren
+        \item Die FFT, die wir benötigen ebenfalls
+      \end{itemize}
   \end{itemize}
 \end{frame}
 
-% Octtree? Baumstruktur?
-
 \section{Implementierung (Gadget)}
 \subsection{Gravitationsberechnung}
-\subsubsection*{Diskretisierung}
-\subsubsection*{Charakteristikenverfahren}
-\subsubsection{Particle-Particle}
-\subsubsection{Particle-Mesh}
-\subsubsection*{allgemein}
-\subsubsection*{P3M}
-\subsubsection*{TreePM}
-\subsection{Zeitentwicklung}
-\subsection{Parallelisierung}
+\begin{frame}{PP-Methode (Particle-Particle)}
+  \begin{itemize}
+    \item Wir berechnen die Kraft auf ein Teilchen explizit (führen die
+      Doppelsumme aus) \pause \\
+      \begin{block}{zur Erinnerung}
+        \begin{align}\sum_{i,j} m_i m_j \varphi(\vec x_i - \vec x_j)\end{align}
+      \end{block}
+      \vskip20pt
+    \item Grauslige Laufzeit: $\mathcal{O}(n^2)$
+      \begin{itemize}
+        \item Verdoppeln der Teilchenanzahl $\Rightarrow$ Vervierfachung des
+          Aufwandes \pause
+        \item Nur für relativ kleine Zahlen tatsächlich machbar
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Baumalgorithmus}
+  Wir führen das Folgende für jedes Teilchen aus:
+  \begin{block}{Algorithmus}
+    \begin{itemize}
+      \item Laufe den Baum herab \pause
+      \item Sind wir weit genug weg oder bei einem Blatt? \pause
+        \begin{itemize}
+          \item Falls ja: Berechne die Masse des Teilbaumes
+          \item Ansonsten führe den Algorithmus für alle Kinder aus
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}{Baumalgorithmus}
+  \begin{itemize}
+    \item Die Genauigkeit hängt von unserer Abbruchbedingung ab \pause
+    \item Die Geschwindigkeit ebenfalls \pause
+    \item Im schlimmsten Fall sind wir wegen Overhead sogar langsamer als PP
+      und wir benötigen mehr Speicher
+      \pause
+      \vskip20pt
+    \item Bei anständigen Abbruchbedingungen: Laufzeit $\mathcal{O}(n\log n)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{PM-Methode (Particle Mesh)}
+  \begin{itemize}
+    \item Legen ein Gitter über unseren Raum
+    \item Die Knoten enthalten die "`Dichte"'
+      \pause
+    \item Fouriertransformation (in Gadget: FFTW)
+      \begin{itemize}
+        \item Wie zuvor, $\Delta \varphi \Rightarrow
+          -\left|\hat{x}\right|^2\hat{\varphi}$
+        \item Lösen die algebraische Gleichung
+        \item Transformieren zurück mit dem selben Algorithmus
+      \end{itemize}
+      \pause
+    \item Auf kurze Reichweiten ungenau aufgrund der Diskretisierung
+  \end{itemize}
+\end{frame}
+
+\subsection{Hybride Verfahren}
+\begin{frame}{$\text{P}^3\text{M}$-Methode (Particle-Particle + Particle Mesh)}
+  \begin{itemize}
+    \item Können aufgrund der Linearität der Poissongleichung aufteilen in 
+      $\varphi = \varphi_{\text{kurz}} + \varphi_{\text{weit}}$
+      \pause
+    \item Beim kurzreichweitigen Teil tragen nur vergleichsweise wenige Teilchen bei
+      $\Rightarrow$ PP-Methode 
+    \item Die Fernwirkung ist durch die PM-Methode hinreichend genau berechenbar
+      \pause
+      \vskip10pt
+    \item Leider immernoch zu langsam aufgrund von Halo-Bildung
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{TreePM-Methode (Baum + Particle Mesh)}
+  \begin{itemize}
+    \item Selber Ansatz wie zuvor, benutzen aber für $\varphi_{\text{kurz}}$
+      unseren Baumalgorithmus
+      \vskip20pt
+    \item $\Rightarrow$ im besten Fall $\mathcal{O}(n\log n)$-Laufzeit im
+      nahreichweitigen Fall \pause
+    \item sehr gute Ergebnisse und deutlich bessere Laufzeit
+  \end{itemize}
+\end{frame}
+
+\subsection*{Zeitentwicklung}
+\begin{frame}{Zeitentwicklung}
+  \begin{itemize}
+    \item<+-> Wir haben nun unsere Kräfte berechnet und wollen das System entwickeln
+    \item<+-> Müssen wiedermal eine Differentialgleichung numerisch lösen, diesmal
+      die Bewegungsgleichung
+    \item<+-> Ist eine gewöhnliche Differentialgleichung $\Rightarrow$ zum Beispiel
+      Leapfrogverfahren
+      \begin{itemize}
+        \item<+-> Berechnen abwechselnd die Position und die Geschwindigkeit
+        \item<+-> $x_{i+1} = x_i + v_{i}\Delta t + a_i\frac{\Delta t^2}{2}$
+        \item<+-> $v_{i+1} = v_{i+1} + \frac{a_i + a_{i+1}}{2}\Delta t$
+      \end{itemize}
+    \item<+-> Genauigkeit lässt sich auch noch steigern (Runge-Kutta, adaptive
+      Verfahren)
+  \end{itemize}
+\end{frame}
+
+\section{Ergebnisse}
+\subsection*{Millennium-Simulation}
+\begin{frame}{Millennium-Simulation}
+  Berechnung der Verteilung der dunklen Materie im Universum
+  \begin{itemize}
+    \item Würfelförmiges Gebiet von $2\cdot 10^9$ Lichtjahren Kantenlänge
+    \item Start der Simulation ist bei der Aussendung der Hintergrundstrahlung
+      mit entsprechenden Anfangsbedingungen (Massenverteilung)
+    \item 10 Milliarden berechnete Tracerteile von jeweils etwa 100 Millionen
+      Sonnenmassen
+      \pause
+    \item Daraus ergaben sich etwa 20 Millionen "`Galaxien"'pause
+  \end{itemize}
+\end{frame}
+
+\subsection*{Aquarius-Projekt}
+\begin{frame}{Aquarius}
+  Nehmen einen der Halos aus einer vorigen Berechnung und rechnen diesen in
+  höherer Auflösung weiter
+  \begin{itemize}
+    \item Größe in etwa so wie die der Milchstraße
+    \item Zeigt sehr viele Klumpen um die Galaxie herum
+  \end{itemize}
+\end{frame}
 
 \section{Zusammenfassung}
 \begin{frame}{Zusammenfassung}
-
-  % Die Zusammenfassung sollte sehr kurz sein.
   \begin{itemize}
   \item
     Wir können mittlerweile mit sehr hoher Genauigkeit und gleichzeitig hoher
     Geschwindigkeit rechnen
+  \item Erhalten damit wichtige Hinweise, ob die aktuellen Theorien stimmen
+    können
   \item
-    Guckstu nächster Vortrag
-  \end{itemize}
-  
-  % Der folgende Ausblick ist optional.
-  \vskip0pt plus.5fill
-  \begin{itemize}
-  \item
-    Ausblick
-    \begin{itemize}
-    \item
-      weitere Parallelisierung (z.B. OpenCL)\\
-      $\Rightarrow$ billigere Rechner und insgesamt mehr Leistung
-    \item
-
-    \end{itemize}
+    Für weiteres: Siehe nächster Vortrag
   \end{itemize}
 \end{frame}
-
 \end{document}
-
 
