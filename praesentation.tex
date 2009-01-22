@@ -111,7 +111,7 @@
   \begin{align}
     \Delta \varphi(\vec{x}) = 4\pi G \rho(\vec{x})
   \end{align}
-  mit einer Dichtefunktion $\rho$, im einfachsten Fall von $n$ Körpern
+  mit einer Dichtefunktion $\rho$\pause, im einfachsten Fall von $n$ Körpern
   \begin{align}
     \rho(\vec x) = \sum_{i=1}^n m_i \delta_d(\vec{x} - \vec{x}_i)
   \end{align}
@@ -145,7 +145,7 @@
       führen wir es parallel aus
       \begin{itemize}
         \item Bäume lassen sich gut parallelisieren
-        \item Die FFT, die wir benötigen ebenfalls
+        \item<6-> Die FFT, die wir ebenfalls benötigen
       \end{itemize}
   \end{itemize}
 \end{frame}
@@ -159,7 +159,6 @@
       \begin{block}{zur Erinnerung}
         \begin{align}\sum_{i,j} m_i m_j \varphi(\vec x_i - \vec x_j)\end{align}
       \end{block}
-      \vskip20pt
     \item Grauslige Laufzeit: $\mathcal{O}(n^2)$
       \begin{itemize}
         \item Verdoppeln der Teilchenanzahl $\Rightarrow$ Vervierfachung des
@@ -170,10 +169,10 @@
 \end{frame}
 
 \begin{frame}{Baumalgorithmus}
-  Wir führen das Folgende für jedes Teilchen aus:
+  Wir führen das Folgende für jedes Teilchen aus:\vskip10pt
   \begin{block}{Algorithmus}
     \begin{itemize}
-      \item Laufe den Baum herab \pause
+      \item Laufe den Baum herab \pause \vskip10pt
       \item Sind wir weit genug weg oder bei einem Blatt? \pause
         \begin{itemize}
           \item Falls ja: Berechne die Masse des Teilbaumes
@@ -198,16 +197,21 @@
 \begin{frame}{PM-Methode (Particle Mesh)}
   \begin{itemize}
     \item Legen ein Gitter über unseren Raum
-    \item Die Knoten enthalten die "`Dichte"'
+      \begin{itemize}
+        \item Die Knoten enthalten die "`Dichte"'
+      \end{itemize}
       \pause
+      \vskip10pt
     \item Fouriertransformation (in Gadget: FFTW)
       \begin{itemize}
-        \item Wie zuvor, $\Delta \varphi \Rightarrow
-          -\left|\hat{x}\right|^2\hat{\varphi}$
+        \item Wie zuvor, $\Delta \varphi(\vec x) \to
+          -\left|\vec k\right|^2\hat{\varphi}(\vec k)$
         \item Lösen die algebraische Gleichung
+          \vskip5pt
         \item Transformieren zurück mit dem selben Algorithmus
       \end{itemize}
       \pause
+      \vskip10pt
     \item Auf kurze Reichweiten ungenau aufgrund der Diskretisierung
   \end{itemize}
 \end{frame}
@@ -215,15 +219,18 @@
 \subsection{Hybride Verfahren}
 \begin{frame}{$\text{P}^3\text{M}$-Methode (Particle-Particle + Particle Mesh)}
   \begin{itemize}
-    \item Können aufgrund der Linearität der Poissongleichung aufteilen in 
+    \item<1-> Können aufgrund der Linearität der Poissongleichung aufteilen in 
       $\varphi = \varphi_{\text{kurz}} + \varphi_{\text{weit}}$
-      \pause
-    \item Beim kurzreichweitigen Teil tragen nur vergleichsweise wenige Teilchen bei
-      $\Rightarrow$ PP-Methode 
-    \item Die Fernwirkung ist durch die PM-Methode hinreichend genau berechenbar
-      \pause
       \vskip10pt
-    \item Leider immernoch zu langsam aufgrund von Halo-Bildung
+      \begin{itemize}
+        \item<2-> Beim kurzreichweitigen Teil tragen nur vergleichsweise wenige
+          Teilchen bei $\Rightarrow$ PP-Methode 
+        \item<2-> Die Fernwirkung ist durch die PM-Methode hinreichend genau
+          berechenbar
+      \end{itemize}
+      \vskip20pt
+    \item<3-> Leider immernoch zu langsam aufgrund von Halo-Bildung \pause
+    \item<4-> Kaum besser als PP
   \end{itemize}
 \end{frame}
 
@@ -275,8 +282,10 @@
 \begin{frame}{Aquarius}
   Nehmen einen der Halos aus einer vorigen Berechnung und rechnen diesen in
   höherer Auflösung weiter
+  \vskip10pt
   \begin{itemize}
     \item Größe in etwa so wie die der Milchstraße
+      \vskip10pt
     \item Zeigt sehr viele Klumpen um die Galaxie herum
   \end{itemize}
 \end{frame}
@@ -284,13 +293,11 @@
 \section{Zusammenfassung}
 \begin{frame}{Zusammenfassung}
   \begin{itemize}
-  \item
-    Wir können mittlerweile mit sehr hoher Genauigkeit und gleichzeitig hoher
-    Geschwindigkeit rechnen
+  \item Wir können mittlerweile mit sehr hoher Genauigkeit und gleichzeitig
+    hoher Geschwindigkeit rechnen
   \item Erhalten damit wichtige Hinweise, ob die aktuellen Theorien stimmen
     können
-  \item
-    Für weiteres: Siehe nächster Vortrag
+  \item Für weiteres: Siehe nächster Vortrag
   \end{itemize}
 \end{frame}
 \end{document}
