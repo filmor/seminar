@@ -1,16 +1,61 @@
-\documentclass{scrartcl}
+\documentclass[a4paper]{scrartcl}
 
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage[scale=0.8]{geometry}
+\usepackage{amsmath}
 
 \author{Benedikt Sauer}
 \title{N-Körperproblem}
 
 \begin{document}
 \maketitle
+\begin{abstract}
+  Dieser Vortrag behandelt die Implementierung und Verwendung von
+  N-Körpersimulationen zur Berechnung der Verteilung dunkler Materie im
+  Universum.
+\end{abstract}
 \section{Einführung}
+Das Mehrkörperproblem besteht allgemein aus mehreren paarweise untereinander
+wechselwirkenden Körper. Für den Fall von genau zwei Körpern (Keplerproblem) ist
+es vollständig (und elementar) lösbar. Für mehr als zwei Körpern existiert zwar
+eine analytische Lösung (\cite{wang}), diese ist allerdings mehr von
+theoretischer Bedeutung. Hier wird die numerische Lösung betrachtet.
+
+Die Hamiltonfunktion des Problems ist
+\begin{align}
+  \mathcal{H}(p_i, x_i) = \sum_i \frac{\left|p_i\right|}{2m_i} +
+  \frac{1}{2} \sum_{i,j} m_i m_j \varphi(x_i - x_j)
+  \label{eq:hamilton}
+\end{align}
+Das darin benötigte Potential erfüllt die Poissongleichung:
+\begin{align}
+  \Delta \varphi(x) = 4\pi G \rho(x)\text{, mit }\rho(x) = \sum_{i=1}^n m_i
+  \delta_d(x - x_i)
+  \label{eq:poisson}
+\end{align}
+
+Die Lösung selbiger ist das Hauptproblem der Simulationen. Hierzu gibt es
+verschiedene Herangehensweisen:
+\begin{description}
+  \item[PP-Methode (Particle-Particle)]
+    Hierbei werden die Kräfte auf ein Teilchen explizit ausgerechnet, indem
+    sämtliche Beiträge aller anderen aufaddiert werden. die Komplexität ist also
+    quadratisch ($\mathcal O(n^2)$), was ein er<+label+>heblicher Nachteil ist.
+  \item[PM-Methode (Particle-Mesh)]
+    Der Raum wird hierbei mit einem Gitter gefüllt. Für jeden einzelnen
+    Gitterpunkt wird dann eine Dichte ausgerechnet. Anschließend wird dieses
+    Gitter fouriertransformiert, wodurch sich die partielle
+    Differentialgleichung zu einer algebraischen Gleichung vereinfacht. Diese
+    wird dann im transformierten Raum gelöst und wieder per FFT
+    zurücktransformiert. Die Methode hat ein deutlich besseres Laufzeitverhalten
+    als PP ($\mathcal O(n\log n)$), unterschätzt aber auf geringe Distanzen
+    zwangsläufig durch die geringe Auflösung die Kräfte.
+
+\end{description}
 
 \section{Implementierung in Gadget}
+
 
 \section{Zusammenfassung}
 
