@@ -1,7 +1,7 @@
 \documentclass[a4paper]{scrartcl}
 
 \usepackage[ngerman]{babel}
-\usepackage[utf8]{inputenc}
+\usepackage[utf8x]{inputenc}
 \usepackage[scale=0.8]{geometry}
 \usepackage{amsmath}
 
@@ -35,13 +35,18 @@ Das darin benötigte Potential erfüllt die Poissongleichung:
   \label{eq:poisson}
 \end{align}
 
-Die Lösung selbiger ist das Hauptproblem der Simulationen. Hierzu gibt es
-verschiedene Herangehensweisen:
+Die Lösung selbiger ist das Hauptproblem der Simulationen (und das hier
+behandelte). Der andere wichtige Bestandteil ist die Zeitentwicklung, auf die
+Implementierung dieser wird zum Beispiel in \cite{time-evo} oder
+\cite{time-evo2} näher eingegangen.
+
+Um die Poissongleichung zu lösen (bzw. konkret die Kraft auf ein Teilchen zu
+berechnen) kann man verschiedene Methoden verwenden:
 \begin{description}
   \item[PP-Methode (Particle-Particle)]
     Hierbei werden die Kräfte auf ein Teilchen explizit ausgerechnet, indem
     sämtliche Beiträge aller anderen aufaddiert werden. die Komplexität ist also
-    quadratisch ($\mathcal O(n^2)$), was ein er<+label+>heblicher Nachteil ist.
+    quadratisch ($\mathcal O(n^2)$), was ein erheblicher Nachteil ist.
   \item[PM-Methode (Particle-Mesh)]
     Der Raum wird hierbei mit einem Gitter gefüllt. Für jeden einzelnen
     Gitterpunkt wird dann eine Dichte ausgerechnet. Anschließend wird dieses
@@ -51,8 +56,24 @@ verschiedene Herangehensweisen:
     zurücktransformiert. Die Methode hat ein deutlich besseres Laufzeitverhalten
     als PP ($\mathcal O(n\log n)$), unterschätzt aber auf geringe Distanzen
     zwangsläufig durch die geringe Auflösung die Kräfte.
-
+  \item[P³M-Methode (Particle-Particle - Particle-Mesh)]
+    Bei dieser Methode werden die Vorteile der beiden Methoden vereint, indem
+    die Kräfte nur in einem kleinen Radius um ein Teilchen herum direkt
+    ausgerechnet werden und auf größere Distanzen die Particle-Mesh-Methode zum
+    Einsatz kommt. Allerdings sieht man in Simulationen meistens ein
+    Zusammenklumpen der Teilchen in Halos von relativ kleinem Radius, wodurch
+    wieder das meiste mit der $\mathcal O (n^2)$-Methode berechnet wird.
 \end{description}
+
+Um den letztgenannten Nachteil gar nicht erst aufkommen zu lassen, wird im
+GADGET2-Code (\cite{}) die \emph{TreePM}-Methode verwendet. Der Raum wird dabei
+rekursiv in jeweils acht gleichgroße Würfel aufgeteilt bis jeder Teilwürfel nur
+noch genau ein Teilchen enthält, das Ergebnis wird in einem Octree gespeichert,
+dessen Blätter eben diese Würfel mit nur noch einem Teilchen sind. In den
+anderen Knoten sind nur die Kindknoten gespeichert, alle Daten liegen also in
+den Blättern.
+
+Um nun die Kraft auf ein Teilchen auszurechnen wird 
 
 \section{Implementierung in Gadget}
 
