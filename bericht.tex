@@ -4,6 +4,14 @@
 \usepackage[utf8x]{inputenc}
 \usepackage[scale=0.8]{geometry}
 \usepackage{amsmath}
+\usepackage{units}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{8pt}
+
+\DeclareMathSymbol{,}{\mathpunct}{letters}{"3B}
+\DeclareMathSymbol{.}{\mathord}{letters}{"3B}
+\DeclareMathSymbol{\decimal}{\mathord}{letters}{"3A}
 
 \author{Benedikt Sauer}
 \title{N-Körperproblem}
@@ -13,7 +21,7 @@
 \begin{abstract}
   Dieser Vortrag behandelt die Implementierung und Verwendung von
   N-Körpersimulationen zur Berechnung der Verteilung dunkler Materie im
-  Universum.
+  Universum, insbesondere die in GADGET-2 eingesetzte TreePM-Methode.
 \end{abstract}
 \section{Einführung}
 Das Mehrkörperproblem besteht allgemein aus mehreren paarweise untereinander
@@ -40,6 +48,7 @@ behandelte). Der andere wichtige Bestandteil ist die Zeitentwicklung, auf die
 Implementierung dieser wird zum Beispiel in \cite{time-evo} oder
 \cite{time-evo2} näher eingegangen.
 
+\section{Implementierung in Gadget}
 Um die Poissongleichung zu lösen (bzw. konkret die Kraft auf ein Teilchen zu
 berechnen) kann man verschiedene Methoden verwenden:
 \begin{description}
@@ -50,12 +59,14 @@ berechnen) kann man verschiedene Methoden verwenden:
   \item[PM-Methode (Particle-Mesh)]
     Der Raum wird hierbei mit einem Gitter gefüllt. Für jeden einzelnen
     Gitterpunkt wird dann eine Dichte ausgerechnet. Anschließend wird dieses
-    Gitter fouriertransformiert, wodurch sich die partielle
-    Differentialgleichung zu einer algebraischen Gleichung vereinfacht. Diese
-    wird dann im transformierten Raum gelöst und wieder per FFT
-    zurücktransformiert. Die Methode hat ein deutlich besseres Laufzeitverhalten
-    als PP ($\mathcal O(n\log n)$), unterschätzt aber auf geringe Distanzen
-    zwangsläufig durch die geringe Auflösung die Kräfte.
+    Gitter fouriertransformiert (konkret durch eine FFT), wodurch sich die
+    partielle Differentialgleichung zu einer algebraischen Gleichung
+    ($\left|\hat x\right| \hat \varphi(\hat x) = 4\pi G \hat \rho(\hat x)$)
+    vereinfacht. Diese wird dann im transformierten Raum gelöst und wieder per
+    FFT zurücktransformiert.  Die Methode hat ein deutlich besseres
+    Laufzeitverhalten als PP ($\mathcal O(n\log n)$), unterschätzt aber auf
+    geringe Distanzen zwangsläufig durch die endliche Gitterauflösung die
+    Kräfte.
   \item[P³M-Methode (Particle-Particle - Particle-Mesh)]
     Bei dieser Methode werden die Vorteile der beiden Methoden vereint, indem
     die Kräfte nur in einem kleinen Radius um ein Teilchen herum direkt
@@ -66,17 +77,30 @@ berechnen) kann man verschiedene Methoden verwenden:
 \end{description}
 
 Um den letztgenannten Nachteil gar nicht erst aufkommen zu lassen, wird im
-GADGET2-Code (\cite{}) die \emph{TreePM}-Methode verwendet. Der Raum wird dabei
-rekursiv in jeweils acht gleichgroße Würfel aufgeteilt bis jeder Teilwürfel nur
-noch genau ein Teilchen enthält, das Ergebnis wird in einem Octree gespeichert,
-dessen Blätter eben diese Würfel mit nur noch einem Teilchen sind. In den
-anderen Knoten sind nur die Kindknoten gespeichert, alle Daten liegen also in
-den Blättern.
+GADGET2-Code (\cite{gadget}) die \emph{TreePM}-Methode, die einen
+Baumalgorithmus statt der PP-Methode auf kurze Distanzen verwendet eingesetzt.
+Der Raum wird dabei zunächst rekursiv in jeweils acht gleichgroße Würfel
+aufgeteilt bis jeder Teilwürfel nur noch genau ein Teilchen enthält, das
+Ergebnis wird in einem Octree gespeichert, dessen Blätter eben diese Würfel mit
+nur noch einem Teilchen sind. In den anderen Knoten sind nur die Kindknoten
+gespeichert, alle Daten liegen also in den Blättern.
 
-Um nun die Kraft auf ein Teilchen auszurechnen wird 
+Um nun die Kraft auf ein Teilchen auszurechnen wird der Baum rekursiv
+durchlaufen, angefangen bei der Wurzel. Für jeden Knoten wird nun anhand
+bestimmter Parameter (z.~B. bisherige Lauftiefe, Entfernung des Mittelpunkts des
+aktuellen Würfels zum betrachteten Teilchen) bestimmt, ob noch weiter
+abgestiegen wird oder die Genauigkeit nun ausreicht. Ist das der Fall, so wird
+eine Multipolentwicklung durchgeführt, wobei es sich gezeigt hat, dass der erste
+Term der Entwicklung, also schlicht die Summe der Massen (falls die Masse aller
+Teilchen gleich ist und leere Würfel nicht gespeichert werden also die Anzahl
+der Blätter des Teilbaums mal der Teilchenmasse) und damit die Kraft errechnet.
 
-\section{Implementierung in Gadget}
-
+Genauigkeit und Geschwindigkeit hängen dabei stark von unserer Abbruchbedingung
+ab (also wie tief wir durchschnittlich in den Baum hineinlaufen). Ist diese
+anständig gewählt (bei GADGET etwa <+Wert aus Gadget+>\cite{gadget-abbruch}), so
+erhält man eine Laufzeit von $\mathcal{O}(\log n)$ für den Baum, insgesamt also
+$\mathcal O(n\log n)$ wie bei der PM-Methode. Die Gesamtlaufzeit ist also
+ebenfalls $\mathcal O(n\log n)$.
 
 \section{Zusammenfassung}
 
