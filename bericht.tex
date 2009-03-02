@@ -45,8 +45,8 @@ Das darin benötigte Potential erfüllt die Poissongleichung:
 
 Die Lösung selbiger ist das Hauptproblem der Simulationen (und das hier
 behandelte). Der andere wichtige Bestandteil ist die Zeitentwicklung, auf die
-Implementierung dieser wird zum Beispiel in \cite{time-evo} oder
-\cite{time-evo2} näher eingegangen.
+Implementierung dieser wird zum Beispiel in \cite{gadget-zeit} oder
+\cite{gadget-zeit2} näher eingegangen.
 
 \section{Implementierung in Gadget}
 Um die Poissongleichung zu lösen (bzw. konkret die Kraft auf ein Teilchen zu
@@ -71,9 +71,10 @@ berechnen) kann man verschiedene Methoden verwenden:
     Bei dieser Methode werden die Vorteile der beiden Methoden vereint, indem
     die Kräfte nur in einem kleinen Radius um ein Teilchen herum direkt
     ausgerechnet werden und auf größere Distanzen die Particle-Mesh-Methode zum
-    Einsatz kommt. Allerdings sieht man in Simulationen meistens ein
-    Zusammenklumpen der Teilchen in Halos von relativ kleinem Radius, wodurch
-    wieder das meiste mit der $\mathcal O (n^2)$-Methode berechnet wird.
+    Einsatz kommt, die Linearität der Poissongleichung ausnutzend. Allerdings
+    sieht man in Simulationen meistens ein Zusammenklumpen der Teilchen in Halos
+    von relativ kleinem Radius, wodurch wieder das meiste mit der $\mathcal O
+    (n^2)$-Methode berechnet wird.
 \end{description}
 
 Um den letztgenannten Nachteil gar nicht erst aufkommen zu lassen, wird im
@@ -102,7 +103,17 @@ erhält man eine Laufzeit von $\mathcal{O}(\log n)$ für den Baum, insgesamt als
 $\mathcal O(n\log n)$ wie bei der PM-Methode. Die Gesamtlaufzeit ist also
 ebenfalls $\mathcal O(n\log n)$.
 
-\section{Zusammenfassung}
+\section{Ergebnisse}
+\subsection{Milleniumssimulation}
+
+\subsection{Project Aquarius}
+Bei \emph{Project Aquarius} nahm man sich einen Halo aus einer anderen
+Simulation, der von Größe und Gestalt dem entspricht, den man für die
+Milchstraße annimmt und rechnete für diesen in höherer Auflösung weiter. Ein
+wichtiges Ergebnis der Simulation war, dass die Zuordnung
+Subcluster~$\leftrightarrow$~Satellitengalaxie so nicht zutreffen kann, da weit
+mehr <+Größenordnung+> Subcluster entstehen als Satellitengalaxien zu beobachten
+sind.
 
 %\begin{thebibliography}
 %    \begin{biblist}
