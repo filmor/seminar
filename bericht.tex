@@ -3,7 +3,7 @@
 \usepackage[ngerman]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage[scale=0.8]{geometry}
-\usepackage{amsmath}
+\usepackage{amsmath, amsrefs}
 \usepackage{units}
 
 \setlength{\parindent}{0pt}
@@ -45,8 +45,8 @@ Das darin benötigte Potential erfüllt die Poissongleichung:
 
 Die Lösung selbiger ist das Hauptproblem der Simulationen (und das hier
 behandelte). Der andere wichtige Bestandteil ist die Zeitentwicklung, auf die
-Implementierung dieser wird zum Beispiel in \cite{gadget-zeit} oder
-\cite{gadget-zeit2} näher eingegangen.
+Implementierung dieser wird zum Beispiel in \cite{gadget-zeit} näher
+eingegangen.
 
 \section{Implementierung in Gadget}
 Um die Poissongleichung zu lösen (bzw. konkret die Kraft auf ein Teilchen zu
@@ -98,13 +98,21 @@ der Blätter des Teilbaums mal der Teilchenmasse) und damit die Kraft errechnet.
 
 Genauigkeit und Geschwindigkeit hängen dabei stark von unserer Abbruchbedingung
 ab (also wie tief wir durchschnittlich in den Baum hineinlaufen). Ist diese
-anständig gewählt (bei GADGET etwa <+Wert aus Gadget+>\cite{gadget-abbruch}), so
-erhält man eine Laufzeit von $\mathcal{O}(\log n)$ für den Baum, insgesamt also
-$\mathcal O(n\log n)$ wie bei der PM-Methode. Die Gesamtlaufzeit ist also
-ebenfalls $\mathcal O(n\log n)$.
+anständig gewählt (bei GADGET siehe \cite{gadget-abbruch}), so erhält man eine
+Laufzeit von $\mathcal{O}(\log n)$ für den Baum, insgesamt also $\mathcal
+O(n\log n)$ wie bei der PM-Methode. Die Gesamtlaufzeit ist also ebenfalls
+$\mathcal O(n\log n)$.
 
 \section{Ergebnisse}
 \subsection{Milleniumssimulation}
+Der \emph{Millennium Run} war eine Simulation eines Teils des Universums des
+Virgo-Konsortiums von etwa dem Zeitpunkt der Aussendung des
+Mikrowellenhintergrundes (etwa $379,000$ Jahre nach dem Urknall) bis heute.
+Dabei wurde in über einem Monat ein Würfel mit einer Seitenlänge von etwa 2
+Milliarden Lichtjahren simuliert, wobei etwa 10 Milliarden Tracerteilchen
+verwendet wurden. Aus der Simulation ging noch einmal sehr gut hervor, wie sich
+die relativ gleichmäßige Verteilung der Materie zuerst hin zu Ebenen, dann zu Linien
+und schließlich zu Punkten entwickelt.
 
 \subsection{Project Aquarius}
 Bei \emph{Project Aquarius} nahm man sich einen Halo aus einer anderen
@@ -112,13 +120,36 @@ Simulation, der von Größe und Gestalt dem entspricht, den man für die
 Milchstraße annimmt und rechnete für diesen in höherer Auflösung weiter. Ein
 wichtiges Ergebnis der Simulation war, dass die Zuordnung
 Subcluster~$\leftrightarrow$~Satellitengalaxie so nicht zutreffen kann, da weit
-mehr <+Größenordnung+> Subcluster entstehen als Satellitengalaxien zu beobachten
+mehr Subcluster entstehen als Satellitengalaxien zu beobachten
 sind.
 
-%\begin{thebibliography}
-%    \begin{biblist}
-%      bla
-%    \end{biblist}
-%\end{thebibliography}
+\begin{bibdiv}
+  \begin{biblist}
+    \bib{wang}{article}{
+      title={The global solution of the n-body problem},
+      author={Wang, Qiudong},
+      date={1991}
+    }
+    \bib*{gadget-base}{article}{
+      title={The cosmological simulation code GADGET-2},
+      author={Springer, Volker},
+      date={2005},
+      journal={MNRAS},
+      volume={364},
+      pages={1105--1134}
+    }
+    \bib{gadget}{article}{
+      xref={gadget-base}
+    }
+    \bib{gadget-zeit}{article}{
+      xref={gadget-base},
+      pages={1114--1117}
+    }
+    \bib{gadget-abbruch}{article}{
+      xref={gadget-base},
+      pages={1113}
+    }
+  \end{biblist}
+\end{bibdiv}
 
 \end{document}
